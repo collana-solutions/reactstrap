@@ -258,8 +258,10 @@ jobs:
             const newVersion = published[0].version;
             const newMajor = parseInt(newVersion.split('.')[0], 10);
 
-            // Only act on stable major bumps (not prereleases)
-            if (newVersion.includes('-') || newMajor < 1) return;
+            // Only act on stable major releases (N.0.0, no prerelease). A minor or patch
+            // release would otherwise create the branch of the previous major whenever it
+            // is missing, for example from upstream's v9 tags on the first 10.x patch.
+            if (!/^\d+\.0\.0$/.test(newVersion) || newMajor < 1) return;
 
             const prevMajor = newMajor - 1;
             const branchName = `release/v${prevMajor}.x`;

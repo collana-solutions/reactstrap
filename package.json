@@ -1,5 +1,5 @@
 {
-  "name": "@neolution-ch/reactstrap",
+  "name": "@collana-solutions/reactstrap",
   "version": "10.0.0",
   "description": "React Bootstrap components",
   "source": "src/index.js",
@@ -13,16 +13,17 @@
     "cover": "jest --coverage",
     "start": "storybook dev -p 8080",
     "build:docs": "storybook build -o ./build",
-    "build:esm": "babel src --out-dir esm --config-file ./babel.esm.config.cjs --extensions '.js,.ts,.tsx'",
-    "build:lib": "babel src --out-dir lib --config-file ./babel.build.config.cjs --extensions '.js,.ts,.tsx'",
-    "build": "yarn clean && concurrently \"yarn:build:*(!docs)\"",
+    "build:esm": "babel src --out-dir esm --config-file ./babel.esm.config.cjs --extensions \".js,.ts,.tsx\"",
+    "build:lib": "babel src --out-dir lib --config-file ./babel.build.config.cjs --extensions \".js,.ts,.tsx\"",
+    "build": "pnpm run clean && concurrently \"pnpm:build:*(!docs)\"",
     "clean": "rm -rf esm lib",
-    "prepublishOnly": "npm run build",
-    "create-release": "npm run cover && sh ./scripts/release",
+    "prepublishOnly": "pnpm run build",
     "lint": "eslint src stories --fix",
     "dtslint": "dtslint types --expectOnly",
     "prettier": "prettier --write src stories",
-    "version": "node_modules/.bin/conventional-changelog -i CHANGELOG.md -o CHANGELOG.md -p angular && git add -A CHANGELOG.md"
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "prettier": {
     "singleQuote": true,
@@ -30,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/reactstrap/reactstrap.git"
+    "url": "git+https://github.com/collana-solutions/reactstrap"
   },
   "files": [
     "LICENSE",
@@ -254,10 +255,7 @@
     "yagi_ <yagitoshiro@gmail.com> (https://github.com/yagitoshiro)"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/reactstrap/reactstrap/issues"
-  },
-  "homepage": "https://github.com/reactstrap/reactstrap#readme",
+  "homepage": "https://github.com/collana-solutions/reactstrap#readme",
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "@popperjs/core": "^2.6.0",
@@ -280,7 +278,8 @@
     "@babel/plugin-transform-modules-commonjs": "^7.21.2",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.12.10",
-    "@release-it/keep-a-changelog": "^3.1.0",
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "@storybook/addon-essentials": "8.6.17",
     "@storybook/addon-links": "8.6.17",
     "@storybook/addon-mdx-gfm": "8.6.17",
@@ -299,8 +298,6 @@
     "babel-preset-react-app": "^10.0.1",
     "bootstrap": "^5.1.0",
     "concurrently": "^7.6.0",
-    "conventional-changelog-cli": "^2.0.21",
-    "conventional-recommended-bump": "^4.1.1",
     "cross-env": "^4.0.0",
     "customize-cra": "^0.9.1",
     "dtslint": "^4.0.4",
@@ -319,17 +316,18 @@
     "jsdom": "^19.0.0",
     "json-loader": "^0.5.7",
     "microbundle": "^0.13.3",
+    "pkg-pr-new": "^0.0.93",
     "prettier": "2.7.1",
     "raw-loader": "^4.0.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-test-renderer": "^19.2.4",
-    "release-it": "^15.10.3",
     "typescript": "^4.0.3",
     "webpack": "^4.43.0"
   },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  }
+  },
+  "packageManager": "pnpm@11.22.0"
 }

@@ -1,10 +1,12 @@
 [![reactstrap](https://cloud.githubusercontent.com/assets/399776/13906899/1de62f0c-ee9f-11e5-95c0-c515fee8e918.png)](https://reactstrap.github.io)
 
-[![NPM Version](https://img.shields.io/npm/v/reactstrap.svg?branch=master)](https://www.npmjs.com/package/reactstrap) [![Build Status](https://github.com/reactstrap/reactstrap/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/reactstrap/reactstrap) [![Coverage Status](https://coveralls.io/repos/github/reactstrap/reactstrap/badge.svg?branch=master)](https://coveralls.io/github/reactstrap/reactstrap?branch=master) [![License](https://img.shields.io/npm/l/reactstrap.svg)](https://github.com/reactstrap/reactstrap/blob/master/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/@collana-solutions/reactstrap.svg)](https://www.npmjs.com/package/@collana-solutions/reactstrap) [![License](https://img.shields.io/npm/l/@collana-solutions/reactstrap.svg)](https://github.com/collana-solutions/reactstrap/blob/master/LICENSE)
 
 # reactstrap
 
 Stateless React Components for Bootstrap 5.
+
+This is the collana solutions fork of [reactstrap](https://github.com/reactstrap/reactstrap), published as [`@collana-solutions/reactstrap`](https://www.npmjs.com/package/@collana-solutions/reactstrap). It adds support for React 19. The components and their documentation are the ones of reactstrap.
 
 If you're using Bootstrap 4, you'll need to use [Reactstrap v8](https://deploy-preview-2356--reactstrap.netlify.app/)
 
@@ -37,7 +39,7 @@ Install reactstrap and Bootstrap from NPM. Reactstrap does not include Bootstrap
 
 ```
 npm i bootstrap
-npm i reactstrap react react-dom
+npm i @collana-solutions/reactstrap react react-dom
 ```
 
 Import Bootstrap CSS in the ```src/index.js``` file:
@@ -49,7 +51,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 Import required reactstrap components within ```src/App.js``` file or your custom component files:
 
 ```js
-import { Button } from 'reactstrap';
+import { Button } from '@collana-solutions/reactstrap';
 ```
 
 Now you are ready to use the imported reactstrap components within your component hierarchy defined in the render
@@ -125,30 +127,36 @@ https://github.com/reactstrap/code-sandbox-examples
 Install dependencies:
 
 ```sh
-yarn install
+pnpm install
 ```
 
 Run examples at [http://localhost:8080/](http://localhost:8080/) with webpack dev server:
 
 ```sh
-yarn start
+pnpm start
 ```
 
 Run tests & coverage report:
 
 ```sh
-yarn cover
+pnpm run cover
 ```
 
 Watch tests:
 
 ```sh
-yarn test
+pnpm test
 ```
 
 ## Releasing
 
-Release branches/versioning/notes will be automatically created and maintained by the [release-please](https://github.com/googleapis/release-please) github action. When you're ready to publish the release, just merge the release branch. The release will be created, the new package will be published, and the updated docs will be deployed to https://reactstrap.github.io/.
+Follows the [collana-solutions release playbook](https://github.com/collana-solutions/release-playbook) (Changesets, public npm variant).
+
+1. Add a changeset to your PR: `pnpm changeset`. CI fails without one.
+2. Merging to `master` opens or updates a **chore: version packages** PR.
+3. Merging that PR publishes the package to npm through trusted publishing and creates the GitHub Release.
+
+Dependabot PRs get a changeset generated automatically. A manual dependency bump does not, so add one yourself.
 
 ## In the wild
 

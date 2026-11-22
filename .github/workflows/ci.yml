@@ -3,84 +3,103 @@ name: CI
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, develop, master]
-    types: [opened, synchronize, ready_for_review]
+    branches:
+      - master
+      - 'release/**'
+    types: [opened, synchronize, reopened, ready_for_review]
 
-# cancel running actions for current PR if new commits were pushed
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
-  depandabot-modify-changelog:
-    if: ${{ github.actor == 'dependabot[bot]' }}
+  changeset-check:
+    name: Changeset Check
+    if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+    runs-on: ubuntu-latest
     permissions:
-      contents: write
-    runs-on: ubuntu-latest
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - run: |
-          insertText="### dependabot: \\\#${{ github.event.pull_request.number }} ${{ github.event.pull_request.title }}"
-
-          # check if file doesn't contain the text already
-          if ! grep -q "$insertText" CHANGELOG.md; then
-            echo "Changelog entry not found, adding it"
-            sed -i "/## \[Unreleased\]/a \
-            $insertText" CHANGELOG.md
-          else
-            echo "Changelog entry already exists, skipping"
-            exit 0
-          fi
-
-      - name: initialize mandatory git config
-        run: |
-          git config user.name "GitHub Changelog Bot"
-          git config user.email changelog-bot@neolution.ch
-
-      - run: npx prettier --write CHANGELOG.md
-
-      - name: commit and push
-        run: |
-          git add CHANGELOG.md
-          git commit -m "Add changelog entry for ${{ github.event.pull_request.title }}"
-          git push
-
-  check-changelog:
-    if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v45
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
 
-      - name: Check if changelog was touched
-        run: |
-          changelogFound=$(echo ${{ steps.changed-files.outputs.all_changed_files }} | grep -ow "CHANGELOG.md" | wc -w)
-          if [ $changelogFound -eq 0 ]; then
-            echo '### :boom: Please update the changelog accordingly (https://keepachangelog.com)' >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
+      # Activates the pnpm version pinned in the root manifest packageManager field.
+      - name: Enable Corepack
+        run: corepack enable
 
-  build:
-    if: github.event.pull_request.draft == false
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # The Version Packages PR consumes the changesets it releases, so the check cannot pass on it. A branch name
+      # alone is no proof (anyone can push a changeset-release/* branch), so the PR must also come from the bot.
+      - name: Check for changesets
+        if: ${{ !(startsWith(github.head_ref, 'changeset-release/') && github.event.pull_request.user.login == 'csag-changesets-bot[bot]') }}
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: pnpm exec changeset status --since="origin/$BASE_REF"
+
+  # Keep the job name: the branch ruleset requires the "Verify" check.
+  verify:
+    name: Verify
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x, 22.x, 24.x]
-
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-      - run: rm -rf node_modules && yarn install --frozen-lockfile
-      - run: npm run lint
-      - run: npm run build --if-present
-      - run: npm run test:ci
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The lint script fixes what it can. Without --fix, a fixable finding fails the check.
+      - name: Lint
+        run: pnpm exec eslint src stories
+
+      # Babel builds lib (CommonJS) and esm, the directories that `files` in package.json publishes.
+      - name: Build
+        run: pnpm run build
+
+      # The test script starts jest in watch mode, test:ci runs the suite once.
+      - name: Test
+        run: pnpm run test:ci
+
+  # Static analysis of the workflows themselves (template injection, unpinned actions,
+  # excessive permissions). Findings fail the job.
+  zizmor:
+    name: zizmor
+    if: github.event_name == 'workflow_dispatch' || !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
+        with:
+          advanced-security: false

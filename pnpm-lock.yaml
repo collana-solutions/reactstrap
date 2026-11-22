@@ -11,9 +11,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.12.5
         version: 7.28.6
-      '@neolution-ch/react-popper':
-        specifier: 3.0.1
-        version: 3.0.1(@popperjs/core@2.10.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@collana-solutions/react-popper':
+        specifier: 3.0.2
+        version: 3.0.2(@popperjs/core@2.10.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@popperjs/core':
         specifier: ^2.6.0
         version: 2.10.1
@@ -962,6 +962,13 @@ packages:
     resolution: {integrity: sha512-dlT1m5e/0yUL0kRNcQn7yGLVThkgbB0Ga/1AmfDDC/8ik6AIiSf2QLQO2zPYvefsHP0aFgxO93cVLCCfDp7kzQ==}
     engines: {node: '>= 20.12.0'}
 
+  '@collana-solutions/react-popper@3.0.2':
+    resolution: {integrity: sha512-Cn77tv7nifpJLL7v2WT8x7fXlxeJTCvwA3fZjYAwRzQA2/Nk3C9/AgPjQbd7a4tUN9pIoRdCndVkDLR6+vD4bw==}
+    peerDependencies:
+      '@popperjs/core': ^2.0.0
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
+
   '@definitelytyped/header-parser@0.2.34':
     resolution: {integrity: sha512-uTpjNtUSOj4PYJLvF/Ba7BGD+t3E2Jge9JxJNrDBe9YAQUt9UWOU3nctDKj2S8Tn3QIcogsUcoWtHs95bs3ekg==}
     engines: {node: '>=20.17.0'}
@@ -1261,13 +1268,6 @@ packages:
     peerDependencies:
       '@types/react': '>=16'
       react: '>=16'
-
-  '@neolution-ch/react-popper@3.0.1':
-    resolution: {integrity: sha512-X9SvNk+D1H+XF2y6JFIxlA657qrGw25KdzeabCi4kGCuKQJgTlE5SvQu9Ovs+eyYiHVzqH8DyIPuVauTHYcSAA==}
-    peerDependencies:
-      '@popperjs/core': ^2.0.0
-      react: ^18 || ^19
-      react-dom: ^18 || ^19
 
   '@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3':
     resolution: {integrity: sha512-s88O1aVtXftvp5bCPB7WnmXc5IwOZZ7YPuwNPt+GtOOXpPvad1LfbmjYv+qII7zP6RU2QGnqve27dnLycEnyEQ==}
@@ -7661,6 +7661,14 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
+  '@collana-solutions/react-popper@3.0.2(@popperjs/core@2.10.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@popperjs/core': 2.10.1
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+      react-fast-compare: 3.2.0
+      warning: 4.0.3
+
   '@definitelytyped/header-parser@0.2.34(bare-buffer@3.7.1)(supports-color@8.1.1)':
     dependencies:
       '@definitelytyped/typescript-versions': 0.1.16
@@ -8016,14 +8024,6 @@ snapshots:
       '@types/mdx': 2.0.13
       '@types/react': 16.9.51
       react: 19.2.4
-
-  '@neolution-ch/react-popper@3.0.1(@popperjs/core@2.10.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
-    dependencies:
-      '@popperjs/core': 2.10.1
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-      react-fast-compare: 3.2.0
-      warning: 4.0.3
 
   '@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3':
     optional: true

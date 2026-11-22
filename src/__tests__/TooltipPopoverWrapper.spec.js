@@ -1,5 +1,5 @@
 import React from 'react';
-import { Popper } from '@neolution-ch/react-popper';
+import { Popper } from '@collana-solutions/react-popper';
 import user from '@testing-library/user-event';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';

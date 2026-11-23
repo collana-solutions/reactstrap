@@ -1,5 +1,11 @@
 # @collana-solutions/reactstrap
 
+## 10.0.2
+
+### Patch Changes
+
+- [#18](https://github.com/collana-solutions/reactstrap/pull/18) [`f894c01`](https://github.com/collana-solutions/reactstrap/commit/f894c0131ac9a707b898c79831fcf869e043ce70) Thanks [@neotrow](https://github.com/neotrow)! - Depends on `@collana-solutions/react-popper` instead of `@neolution-ch/react-popper`, no other change. The new package has the same code as before, so nothing changes for consumers.
+
 ## 10.0.1
 
 ### Patch Changes

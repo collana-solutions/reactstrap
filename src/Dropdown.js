@@ -3,7 +3,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Manager } from '@neolution-ch/react-popper';
+import { Manager } from '@collana-solutions/react-popper';
 import classNames from 'classnames';
 import { DropdownContext } from './DropdownContext';
 import { mapToCssModules, omit, tagPropType } from './utils';
